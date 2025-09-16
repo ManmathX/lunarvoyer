@@ -1,0 +1,168 @@
+import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
+import { Position3D, Velocity3D, OrbitalElements, EARTH_RADIUS, MU_EARTH } from "../orbitalMechanics";
+import { Hazard, generateRandomHazards } from "../hazards";
+
+export interface CelestialBody {
+  position: Position3D;
+  radius: number;
+  mass: number;
+  mu: number; // Standard gravitational parameter
+}
+
+export interface Spacecraft {
+  position: Position3D;
+  velocity: Velocity3D;
+  mass: number;
+  fuel: number;
+  maxFuel: number;
+  maxMass: number;
+  orbitalElements: OrbitalElements;
+  isBurning: boolean;
+}
+
+export interface MissionEvent {
+  time: number;
+  type: 'burn' | 'hazard' | 'milestone';
+  description: string;
+  deltaV?: number;
+}
+
+interface SpaceGameState {
+  // Game objects
+  spacecraft: Spacecraft;
+  earth: CelestialBody;
+  moon: CelestialBody;
+  hazards: Hazard[];
+  
+  // Game state
+  gameTime: number;
+  timeWarp: number;
+  missionEvents: MissionEvent[];
+  score: number;
+  
+  // Actions
+  updateSpacecraft: (spacecraft: Spacecraft) => void;
+  updateGameTime: (time: number) => void;
+  updateHazards: (hazards: Hazard[]) => void;
+  addMissionEvent: (event: MissionEvent) => void;
+  toggleTimeWarp: () => void;
+  resetMission: () => void;
+}
+
+// Initial spacecraft in Low Earth Orbit
+const initialSpacecraft: Spacecraft = {
+  position: { x: 0, y: 0, z: EARTH_RADIUS + 300 }, // 300km altitude
+  velocity: { x: 7.8, y: 0, z: 0 }, // ~7.8 km/s orbital velocity
+  mass: 1000, // kg
+  fuel: 500, // kg
+  maxFuel: 500,
+  maxMass: 1000,
+  orbitalElements: {
+    semiMajorAxis: EARTH_RADIUS + 300,
+    eccentricity: 0.01,
+    inclination: 0.1, // ~6 degrees
+    longitudeOfAscendingNode: 0,
+    argumentOfPeriapsis: 0,
+    trueAnomaly: 0,
+    meanAnomaly: 0,
+    altitude: 300
+  },
+  isBurning: false
+};
+
+const initialEarth: CelestialBody = {
+  position: { x: 0, y: 0, z: 0 },
+  radius: EARTH_RADIUS / 1000, // Scale down for visualization
+  mass: 5.972e24,
+  mu: MU_EARTH
+};
+
+const initialMoon: CelestialBody = {
+  position: { x: 60, y: 0, z: 0 }, // Simplified moon position
+  radius: 1.737, // Moon radius in visualization scale
+  mass: 7.342e22,
+  mu: 4902.7779
+};
+
+export const useSpaceGame = create<SpaceGameState>()(
+  subscribeWithSelector((set, get) => ({
+    // Initial state
+    spacecraft: initialSpacecraft,
+    earth: initialEarth,
+    moon: initialMoon,
+    hazards: generateRandomHazards(5, 0),
+    gameTime: 0,
+    timeWarp: 1,
+    missionEvents: [],
+    score: 1000,
+    
+    // Actions
+    updateSpacecraft: (spacecraft) => {
+      set({ spacecraft: { ...spacecraft, isBurning: false } });
+      
+      // Update score based on fuel efficiency
+      const fuelEfficiency = spacecraft.fuel / spacecraft.maxFuel;
+      const newScore = 1000 * fuelEfficiency;
+      set({ score: newScore });
+    },
+    
+    updateGameTime: (time) => set({ gameTime: time }),
+    
+    updateHazards: (hazards) => set({ hazards }),
+    
+    addMissionEvent: (event) => {
+      const { missionEvents } = get();
+      set({ missionEvents: [...missionEvents, event] });
+    },
+    
+    toggleTimeWarp: () => {
+      const { timeWarp } = get();
+      const newTimeWarp = timeWarp === 1 ? 5 : timeWarp === 5 ? 10 : 1;
+      set({ timeWarp: newTimeWarp });
+    },
+    
+    resetMission: () => {
+      set({
+        spacecraft: { ...initialSpacecraft },
+        gameTime: 0,
+        timeWarp: 1,
+        missionEvents: [],
+        score: 1000,
+        hazards: generateRandomHazards(5, 0)
+      });
+    }
+  }))
+);
+
+// Subscribe to spacecraft changes to detect mission milestones
+useSpaceGame.subscribe(
+  (state) => state.spacecraft,
+  (spacecraft) => {
+    const { moon, addMissionEvent } = useSpaceGame.getState();
+    
+    // Check if reached moon's sphere of influence
+    const distanceToMoon = Math.sqrt(
+      (spacecraft.position.x - moon.position.x) ** 2 +
+      (spacecraft.position.y - moon.position.y) ** 2 +
+      (spacecraft.position.z - moon.position.z) ** 2
+    );
+    
+    if (distanceToMoon < 10) { // Within 10 units of moon
+      addMissionEvent({
+        time: Date.now(),
+        type: 'milestone',
+        description: 'Entered Moon\'s sphere of influence!'
+      });
+    }
+    
+    // Check for low fuel warning
+    if (spacecraft.fuel < 100 && spacecraft.fuel > 0) {
+      addMissionEvent({
+        time: Date.now(),
+        type: 'hazard',
+        description: 'Low fuel warning!'
+      });
+    }
+  }
+);
