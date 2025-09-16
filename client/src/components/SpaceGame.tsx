@@ -96,7 +96,7 @@ export default function SpaceGame() {
       </group>
 
       {/* Hazards */}
-      {hazards.map((hazard, index) => (
+      {hazards.map((hazard: any, index: number) => (
         <group key={index} position={[hazard.position.x, hazard.position.y, hazard.position.z]}>
           {hazard.type === 'radiation' && (
             <mesh>

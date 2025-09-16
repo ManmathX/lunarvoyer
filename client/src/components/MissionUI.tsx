@@ -147,7 +147,7 @@ export default function MissionUI() {
           </CardHeader>
           <CardContent>
             <div className="space-y-1 max-h-32 overflow-y-auto">
-              {missionEvents.slice(-5).reverse().map((event, index) => (
+              {missionEvents.slice(-5).reverse().map((event: any, index: number) => (
                 <div key={index} className="text-xs">
                   <span className="text-gray-400">[{new Date(event.time).toLocaleTimeString()}]</span>
                   <br />

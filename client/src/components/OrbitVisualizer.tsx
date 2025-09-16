@@ -14,7 +14,7 @@ export default function OrbitVisualizer({ spacecraft, earth }: OrbitVisualizerPr
     return calculateOrbitPoints(spacecraft.orbitalElements, earth, 64);
   }, [spacecraft.orbitalElements, earth]);
 
-  const points = orbitPoints.map(point => new Vector3(point.x, point.y, point.z));
+  const points = orbitPoints.map((point: any) => new Vector3(point.x, point.y, point.z));
 
   return (
     <Line
