@@ -1,0 +1,588 @@
+🔹 Orbital Elements (15 Classical + Extended)
+
+Semi-major axis (a): Size of the orbit.
+
+𝐸
+=
+−
+𝜇
+2
+𝑎
+E=−
+2a
+μ
+	​
+
+
+Eccentricity (e): Shape of orbit (0=circle, 0<e<1 ellipse).
+
+Inclination (i): Tilt of orbit wrt equator.
+
+Longitude of ascending node (Ω): Where orbit crosses equator northward.
+
+Argument of periapsis (ω): Orientation of closest approach.
+
+True anomaly (ν): Current position angle in orbit.
+
+Mean anomaly (M): Average position.
+
+Eccentric anomaly (E): Kepler’s relation:
+
+𝑀
+=
+𝐸
+−
+𝑒
+sin
+⁡
+𝐸
+M=E−esinE
+
+Orbital energy (E):
+
+𝐸
+=
+𝑣
+2
+2
+−
+𝜇
+𝑟
+E=
+2
+v
+2
+	​
+
+−
+r
+μ
+	​
+
+
+Angular momentum (h):
+
+ℎ
+⃗
+=
+𝑟
+⃗
+×
+𝑣
+⃗
+h
+=
+r
+×
+v
+
+Flight path angle (γ):
+
+𝛾
+=
+tan
+⁡
+−
+1
+(
+𝑣
+𝑟
+𝑣
+𝜃
+)
+γ=tan
+−1
+(
+v
+θ
+	​
+
+v
+r
+	​
+
+	​
+
+)
+
+Relative velocity vectors: Velocity compared to hazards/targets.
+
+Orbital plane orientation/rotation: Defines spatial direction.
+
+Perigee/Apogee altitudes:
+
+𝑟
+𝑝
+=
+𝑎
+(
+1
+−
+𝑒
+)
+,
+𝑟
+𝑎
+=
+𝑎
+(
+1
++
+𝑒
+)
+r
+p
+	​
+
+=a(1−e),r
+a
+	​
+
+=a(1+e)
+
+Epoch/Time stamp: Reference time for orbital elements.
+
+🔹 Core Physics Formulas
+
+Newton’s Second Law:
+
+𝐹
+=
+𝑚
+𝑎
+F=ma
+
+Gravitational Force:
+
+𝐹
+=
+𝐺
+𝑀
+𝑚
+𝑟
+2
+F=
+r
+2
+GMm
+	​
+
+
+Vis-Viva Equation:
+
+𝑣
+=
+𝐺
+𝑀
+(
+2
+𝑟
+−
+1
+𝑎
+)
+v=
+GM(
+r
+2
+	​
+
+−
+a
+1
+	​
+
+)
+	​
+
+🔹 Orbital Transfers & Δv
+
+Hohmann Transfer Δv:
+
+Δ
+𝑣
+1
+=
+𝐺
+𝑀
+𝑟
+1
+(
+2
+𝑟
+2
+𝑟
+1
++
+𝑟
+2
+−
+1
+)
+,
+Δ
+𝑣
+2
+=
+𝐺
+𝑀
+𝑟
+2
+(
+1
+−
+2
+𝑟
+1
+𝑟
+1
++
+𝑟
+2
+)
+Δv
+1
+	​
+
+=
+r
+1
+	​
+
+GM
+	​
+
+	​
+
+(
+r
+1
+	​
+
++r
+2
+	​
+
+2r
+2
+	​
+
+	​
+
+	​
+
+−1),Δv
+2
+	​
+
+=
+r
+2
+	​
+
+GM
+	​
+
+	​
+
+(1−
+r
+1
+	​
+
++r
+2
+	​
+
+2r
+1
+	​
+
+	​
+
+	​
+
+)
+
+Tsiolkovsky Rocket Equation:
+
+Δ
+𝑣
+=
+𝑣
+𝑒
+ln
+⁡
+(
+𝑚
+𝑖
+𝑚
+𝑓
+)
+Δv=v
+e
+	​
+
+ln(
+m
+f
+	​
+
+m
+i
+	​
+
+	​
+
+)
+🔹 Time & Duration
+
+Kepler’s Third Law:
+
+𝑇
+2
+∝
+𝑎
+3
+T
+2
+∝a
+3
+🔹 Perturbation Forces (RTN Frame)
+
+Decomposition:
+
+𝐹
+⃗
+=
+𝑅
+𝑒
+^
+𝑅
++
+𝑇
+𝑒
+^
+𝑇
++
+𝑁
+𝑒
+^
+𝑁
+F
+=R
+e
+^
+R
+	​
+
++T
+e
+^
+T
+	​
+
++N
+e
+^
+N
+	​
+
+
+Energy change:
+
+𝐸
+˙
+=
+𝐹
+⃗
+⋅
+𝑣
+⃗
+=
+𝑣
+𝑟
+𝑅
++
+𝑣
+𝜃
+𝑇
+E
+˙
+=
+F
+⋅
+v
+=v
+r
+	​
+
+R+v
+θ
+	​
+
+T
+
+Angular momentum change:
+
+ℎ
+⃗
+˙
+=
+𝑟
+⃗
+×
+𝐹
+⃗
+=
+𝑟
+𝑇
+𝑒
+^
+𝑁
+−
+𝑟
+𝑁
+𝑒
+^
+𝑇
+h
+˙
+=
+r
+×
+F
+=rT
+e
+^
+N
+	​
+
+−rN
+e
+^
+T
+	​
+
+🔹 Safety & Hazard Formulas
+
+Radiation Dose:
+
+𝐷
+=
+∫
+Φ
+(
+𝐸
+)
+𝑆
+(
+𝐸
+)
+ 
+𝑑
+𝐸
+D=∫Φ(E)S(E)dE
+
+Geomagnetic Trigger:
+
+𝐾
+𝑝
+≥
+7
+K
+p
+	​
+
+≥7
+
+Collision Probability (Pc):
+
+𝑑
+min
+⁡
+=
+∥
+𝑟
+⃗
+𝑠
+𝑐
+(
+𝑡
+𝑐
+)
+−
+𝑟
+⃗
+𝑜
+𝑏
+𝑗
+(
+𝑡
+𝑐
+)
+∥
+d
+min
+	​
+
+=∥
+r
+sc
+	​
+
+(t
+c
+	​
+
+)−
+r
+obj
+	​
+
+(t
+c
+	​
+
+)∥
+🔹 Attitude & Control
+
+Torque:
+
+𝜏
+=
+𝑟
+×
+𝐹
+τ=r×F
+
+Euler’s Rotational Dynamics:
+
+𝐼
+𝜔
+˙
++
+𝜔
+×
+(
+𝐼
+𝜔
+)
+=
+𝜏
+I
+ω
+˙
++ω×(Iω)=τ
+
+✅ So the pipeline:
+
+Use Newton + Vis-Viva for motion.
+
+Check Δv with Rocket Eqn for feasibility.
+
+Propagate using 15 elements.
+
+Correct with perturbations.
+
+Apply safety checks (radiation, debris, torque).
