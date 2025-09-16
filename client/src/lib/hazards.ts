@@ -40,11 +40,11 @@ export function generateRandomHazards(count: number, gameTime: number): Hazard[]
         id,
         type: 'radiation',
         position: {
-          x: (Math.random() - 0.5) * 100,
-          y: (Math.random() - 0.5) * 100,
-          z: (Math.random() - 0.5) * 100
+          x: (Math.random() - 0.5) * 40 + (Math.random() > 0.5 ? 20 : -20),
+          y: (Math.random() - 0.5) * 40,
+          z: (Math.random() - 0.5) * 40
         },
-        radius: 5 + Math.random() * 15,
+        radius: 1 + Math.random() * 3,
         intensity: Math.random() * 100,
         duration: 60 + Math.random() * 300, // 1-6 minutes
         timeRemaining: 60 + Math.random() * 300,
@@ -55,9 +55,9 @@ export function generateRandomHazards(count: number, gameTime: number): Hazard[]
         id,
         type: 'debris',
         position: {
-          x: (Math.random() - 0.5) * 80,
-          y: (Math.random() - 0.5) * 80,
-          z: (Math.random() - 0.5) * 80
+          x: (Math.random() - 0.5) * 30 + (Math.random() > 0.5 ? 15 : -15),
+          y: (Math.random() - 0.5) * 30,
+          z: (Math.random() - 0.5) * 30
         },
         velocity: {
           x: (Math.random() - 0.5) * 10,

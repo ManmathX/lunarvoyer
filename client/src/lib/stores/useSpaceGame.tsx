@@ -51,31 +51,36 @@ interface SpaceGameState {
 }
 
 // Initial spacecraft in Low Earth Orbit
+// Using visualization scale (Earth radius ~6.37 units)
+const VISUALIZATION_SCALE = 1000; // 1 unit = 1000 km
+const earthVisRadius = EARTH_RADIUS / VISUALIZATION_SCALE;
+const spacecraftAltitude = 300 / VISUALIZATION_SCALE; // 300km -> 0.3 units
+
 const initialSpacecraft: Spacecraft = {
-  position: { x: 0, y: 0, z: EARTH_RADIUS + 300 }, // 300km altitude
-  velocity: { x: 7.8, y: 0, z: 0 }, // ~7.8 km/s orbital velocity
+  position: { x: 0, y: 0, z: earthVisRadius + spacecraftAltitude }, // 300km altitude in visualization scale
+  velocity: { x: 0.0078, y: 0, z: 0 }, // ~7.8 km/s -> 0.0078 units/s in visualization scale
   mass: 1000, // kg
   fuel: 500, // kg
   maxFuel: 500,
   maxMass: 1000,
   orbitalElements: {
-    semiMajorAxis: EARTH_RADIUS + 300,
+    semiMajorAxis: earthVisRadius + spacecraftAltitude,
     eccentricity: 0.01,
     inclination: 0.1, // ~6 degrees
     longitudeOfAscendingNode: 0,
     argumentOfPeriapsis: 0,
     trueAnomaly: 0,
     meanAnomaly: 0,
-    altitude: 300
+    altitude: spacecraftAltitude * VISUALIZATION_SCALE // Keep altitude in km for UI
   },
   isBurning: false
 };
 
 const initialEarth: CelestialBody = {
   position: { x: 0, y: 0, z: 0 },
-  radius: EARTH_RADIUS / 1000, // Scale down for visualization
+  radius: earthVisRadius, // Scaled down for visualization
   mass: 5.972e24,
-  mu: MU_EARTH
+  mu: MU_EARTH / (VISUALIZATION_SCALE * VISUALIZATION_SCALE * VISUALIZATION_SCALE) // Scale mu for visualization units
 };
 
 const initialMoon: CelestialBody = {
