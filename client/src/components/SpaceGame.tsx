@@ -23,11 +23,12 @@ export default function SpaceGame() {
   } = useSpaceGame();
 
   useFrame((state, delta) => {
-    const adjustedDelta = delta * timeWarp;
+    const SIMULATION_SPEED = 20; // amplify time to make motion visible
+    const adjustedDelta = delta * timeWarp * SIMULATION_SPEED;
     const newTime = gameTime + adjustedDelta;
     
     // Update spacecraft orbital motion
-    const newSpacecraft = updateOrbitalMotion(spacecraft, earth, adjustedDelta);
+    const newSpacecraft = updateOrbitalMotion(spacecraft, earth, adjustedDelta, moon);
     updateSpacecraft(newSpacecraft);
     
     // Update hazards
@@ -80,11 +81,11 @@ export default function SpaceGame() {
         </Text>
       </group>
 
-      {/* Spacecraft */}
+      {/* Spacecraft (satellite) */}
       <group position={[spacecraft.position.x, spacecraft.position.y, spacecraft.position.z]}>
         <mesh castShadow>
           <boxGeometry args={[0.5, 0.5, 1]} />
-          <meshLambertMaterial color="#ff6b35" />
+          <meshLambertMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.2} />
         </mesh>
         {/* Thrust visualization */}
         {spacecraft.isBurning && (

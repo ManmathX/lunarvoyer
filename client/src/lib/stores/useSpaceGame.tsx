@@ -58,7 +58,8 @@ const spacecraftAltitude = 300 / VISUALIZATION_SCALE; // 300km -> 0.3 units
 
 const initialSpacecraft: Spacecraft = {
   position: { x: 0, y: 0, z: earthVisRadius + spacecraftAltitude }, // 300km altitude in visualization scale
-  velocity: { x: 0.0078, y: 0, z: 0 }, // ~7.8 km/s -> 0.0078 units/s in visualization scale
+  // Reduce initial orbital speed to slow the satellite visually
+  velocity: { x: 0.0039, y: 0, z: 0 }, // half speed for clearer visibility
   mass: 1000, // kg
   fuel: 500, // kg
   maxFuel: 500,
@@ -87,7 +88,8 @@ const initialMoon: CelestialBody = {
   position: { x: 60, y: 0, z: 0 }, // Simplified moon position
   radius: 1.737, // Moon radius in visualization scale
   mass: 7.342e22,
-  mu: 4902.7779
+  // Scale Moon mu to visualization units (similar scale used for Earth mu above)
+  mu: 4902.7779 / (VISUALIZATION_SCALE * VISUALIZATION_SCALE * VISUALIZATION_SCALE)
 };
 
 export const useSpaceGame = create<SpaceGameState>()(
@@ -98,7 +100,7 @@ export const useSpaceGame = create<SpaceGameState>()(
     moon: initialMoon,
     hazards: generateRandomHazards(5, 0),
     gameTime: 0,
-    timeWarp: 1,
+    timeWarp: 2,
     missionEvents: [],
     score: 1000,
     
@@ -123,7 +125,8 @@ export const useSpaceGame = create<SpaceGameState>()(
     
     toggleTimeWarp: () => {
       const { timeWarp } = get();
-      const newTimeWarp = timeWarp === 1 ? 5 : timeWarp === 5 ? 10 : 1;
+      // Limit max time warp to slow overall simulation speed for visibility
+      const newTimeWarp = timeWarp === 1 ? 2 : 1;
       set({ timeWarp: newTimeWarp });
     },
     

@@ -122,9 +122,8 @@ function App() {
   }
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
-      <KeyboardControls map={controls}>
-        <Canvas
+    <div style={{ width: '100%', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
+      <Canvas
           shadows={false} // Disable shadows for better compatibility
           camera={{
             position: [0, 0, 50],
@@ -167,12 +166,13 @@ function App() {
           />
           
           <Suspense fallback={null}>
-            <SpaceGame />
+            <KeyboardControls map={controls}>
+              <SpaceGame />
+            </KeyboardControls>
           </Suspense>
         </Canvas>
         
         <MissionUI />
-      </KeyboardControls>
     </div>
   );
 }

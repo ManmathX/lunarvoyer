@@ -145,9 +145,10 @@ export function cartesianToOrbitalElements(position: Position3D, velocity: Veloc
 }
 
 // Update orbital motion over time
-export function updateOrbitalMotion(spacecraft: any, earth: any, deltaTime: number): any {
+export function updateOrbitalMotion(spacecraft: any, earth: any, deltaTime: number, moon?: any): any {
   const elements = spacecraft.orbitalElements;
-  const mu = MU_EARTH;
+  // Use scaled mu from state to control simulation speed/scale
+  const mu = earth.mu ?? MU_EARTH;
   
   // Calculate mean motion (n = sqrt(μ/a³))
   const n = Math.sqrt(mu / Math.pow(elements.semiMajorAxis, 3));
@@ -175,8 +176,29 @@ export function updateOrbitalMotion(spacecraft: any, earth: any, deltaTime: numb
     trueAnomaly: nu
   };
   
-  // Convert to Cartesian coordinates
+  // Convert to Cartesian coordinates around Earth
   const { position, velocity } = orbitalElementsToCartesian(newElements, mu);
+
+  // Apply a perturbation from the Moon's gravity if provided
+  if (moon && typeof moon.mu === "number") {
+    const dx = moon.position.x - position.x;
+    const dy = moon.position.y - position.y;
+    const dz = moon.position.z - position.z;
+    const r2 = dx * dx + dy * dy + dz * dz;
+    const r = Math.sqrt(r2) || 1e-6;
+    const accelFactor = moon.mu / (r2 * r); // = mu / r^3
+    const ax = accelFactor * dx;
+    const ay = accelFactor * dy;
+    const az = accelFactor * dz;
+
+    // Semi-implicit Euler step for small perturbation
+    velocity.x += ax * deltaTime;
+    velocity.y += ay * deltaTime;
+    velocity.z += az * deltaTime;
+    position.x += velocity.x * deltaTime;
+    position.y += velocity.y * deltaTime;
+    position.z += velocity.z * deltaTime;
+  }
   
   return {
     ...spacecraft,

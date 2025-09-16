@@ -13,13 +13,24 @@ export function Interface() {
   // Handle clicks on the interface in the ready phase to start the game
   useEffect(() => {
     if (phase === "ready") {
-      const handleClick = () => {
+      const handleClick = (event: MouseEvent) => {
+        const clickTarget = event.target as HTMLElement | null;
+
+        // Ignore clicks on interactive UI elements so real buttons work
+        const isInteractive = clickTarget?.closest(
+          'button, [role="button"], a, input, textarea, select, [contenteditable], [data-no-start]'
+        );
+        if (isInteractive) {
+          return;
+        }
+
         const activeElement = document.activeElement;
-        if (activeElement && 'blur' in activeElement) {
+        if (activeElement && "blur" in activeElement) {
           (activeElement as HTMLElement).blur();
         }
-        const event = new KeyboardEvent("keydown", { code: "Space" });
-        window.dispatchEvent(event);
+
+        const spaceDown = new KeyboardEvent("keydown", { code: "Space" });
+        window.dispatchEvent(spaceDown);
       };
 
       window.addEventListener("click", handleClick);
