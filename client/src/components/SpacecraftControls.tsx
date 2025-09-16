@@ -24,12 +24,26 @@ export default function SpacecraftControls() {
   } = useSpaceGame();
 
   useEffect(() => {
+    console.log("SpacecraftControls mounted, setting up keyboard listeners");
+    
+    // Test if controls are working
+    const testControls = setInterval(() => {
+      const controls = getState();
+      const anyPressed = Object.values(controls).some(pressed => pressed);
+      if (anyPressed) {
+        console.log("Controls state:", controls);
+      }
+    }, 1000);
+
+    setTimeout(() => clearInterval(testControls), 10000); // Stop after 10 seconds
     const unsubscribeBurn = subscribe(
       state => state.burn,
       (pressed) => {
+        console.log("Burn key pressed:", pressed);
         if (pressed && spacecraft.fuel > 0) {
-          console.log("Burn initiated");
+          console.log("Burn initiated - fuel available:", spacecraft.fuel);
           const controls = getState();
+          console.log("Current controls:", controls);
           let burnDirection = { x: 0, y: 0, z: 0 };
           
           // Determine burn direction based on controls
@@ -45,8 +59,11 @@ export default function SpacecraftControls() {
             burnDirection.z = 1;
           }
           
+          console.log("Burn direction:", burnDirection);
+          
           // Apply burn
           const burnResult = applyBurn(spacecraft, burnDirection, 1.0); // 1 m/s delta-v
+          console.log("Burn result:", burnResult);
           updateSpacecraft(burnResult.spacecraft);
           
           addMissionEvent({
@@ -55,6 +72,8 @@ export default function SpacecraftControls() {
             description: `Burn: ${burnResult.deltaV.toFixed(2)} m/s, Fuel: ${burnResult.spacecraft.fuel.toFixed(1)} kg`,
             deltaV: burnResult.deltaV
           });
+        } else if (pressed) {
+          console.log("Burn pressed but no fuel available. Fuel:", spacecraft.fuel);
         }
       }
     );
@@ -62,6 +81,7 @@ export default function SpacecraftControls() {
     const unsubscribeWarp = subscribe(
       state => state.warp,
       (pressed) => {
+        console.log("Time warp key pressed:", pressed);
         if (pressed) {
           console.log("Time warp toggled");
           toggleTimeWarp();
